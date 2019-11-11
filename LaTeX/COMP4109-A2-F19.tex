@@ -1,0 +1,297 @@
+% !TEX program = pdfLaTeX
+ 
+\documentclass[12pt, letterpaper]{article}
+
+ 
+\usepackage{amssymb,amsmath}       % for more math
+\usepackage{fancyvrb}              % for fancy verbatim mode
+\usepackage{xcolor}                % to use colours
+\usepackage[margin=2cm]{geometry}  % page layout
+\usepackage{graphicx}              % to include grahics
+\usepackage{array}        
+\usepackage{pifont}                % for some fancy characters 
+
+\usepackage[pdftitle={COMP4109 Assignment},
+            pdfsubject={Carleton University, 
+                        COMP4109, Fall 2019},
+            pdfauthor={M. Jason Hinek}]%
+            {hyperref}
+            
+            
+%%
+%% finding last page number if needed \ref{LastPage}
+%%
+\usepackage{lastpage}              % to find the last page
+
+
+%%
+%% set some fancy headers/footers
+%%
+\usepackage{fancyhdr}              % fancy headers
+\pagestyle{fancy}
+\lhead{\large \textbf{COMP4109 - Assignment 2}}
+\rhead{\large {\textbf{Due \textcolor{red}{Wednesday, Nov 20, 10:25am}}}}
+\lfoot{Applied Cryptography}
+\cfoot{}
+\rfoot{\thepage\ of \pageref{LastPage}}
+
+%%
+%% some things to make my life easier
+%%
+
+%% bold green text
+\newcommand{\bgreen}[1]{\textbf{\textcolor{green!50!black}{#1}}}
+
+%% the set of integers Z
+\newcommand{\ZZ}{\ensuremath{\mathbb{Z}}}
+
+%% writing typewriter style (for code)
+\newcommand{\code}[1]{\texttt{#1}}
+
+ 
+\newcommand{\answer}[1]{{\small{\color{blue}#1}}}
+\renewcommand{\answer}[1]{}
+
+% I don't like paragraphs indented   
+\setlength\parindent{0pt}
+ 
+% --------------------------------------------------------------------------- %   
+\begin{document}
+
+{\Large
+\begin{tabular}{rm{6cm}rm{6cm}}
+Name :  & Lachlan Campbell & Name : & Jonathan Vidal           \\
+ID :    & 100999056   & ID :   & 101002247
+\end{tabular}
+}
+
+\bigskip
+\hrule
+\bigskip
+
+
+You can work in groups of two for the assignments. Each group will submit a single
+typeset hardcopy of your solution to be submitted to cuLEarn. Be sure to include the name and student id for
+each person working on the assignment.  
+
+\bigskip   % a big skip (horizontal spacing)
+\hrule     % line across the page
+\bigskip   % a big skip (horizontal spacing)
+\hrule     % line across the page
+
+
+
+% ------------------------------------------- %
+% -                      Hash Functions     - %
+% ------------------------------------------- %
+\section{Hash Functions}
+
+Let $f$, $g$ and $h$ be hash functions that each map binary strings of length $2n$ to binary strings of length $n$. That is,
+\[ f\colon \{0,1\}^{2n} \to \{0,1\}^n \]
+\[ g\colon \{0,1\}^{2n} \to \{0,1\}^n \]
+\[ h\colon \{0,1\}^{2n} \to \{0,1\}^n \]
+
+Suppose that  
+
+ \[h(x) = f( g(x) || g(x) ),\]
+
+where $a||b$ means $a$ concatenated with $b$.  
+Let $CR$ be the set of all collision resistant hash functions. Prove that if $f \in CR$ and $g \in CR$ then $h \in CR$. That is, prove that $f \in CR \land g \in CR \Rightarrow h \in CR$.
+
+\medskip
+
+[Hint: review COMP1805 proof techniques.]
+
+
+
+% ------------------------------------------- %
+% ------------------------------------------- %
+% ------------------------------------------- %
+\section{Textbook RSA}
+
+In each of these problems, consider textbook RSA.  
+The modulus $N = pq$ is the product of two primes $p$ and $q$ and the public/private exponents $e/d$ are computed
+as inverses modulo $\phi(N)$.  That is, $ed \equiv 1 \bmod {\phi(N)}$, where $\phi(N) = (p-1)(q-1)$.
+
+
+\begin{itemize}
+
+\item[a)] Consider the RSA public key 
+$(e,N) = (9292162750094637473537, 13029506445953503759481)$.
+Find the corresponding private exponent $d \in \mathbb{Z}_N^*$.  
+Show how you did this. 
+
+
+
+\item[b)] Using the RSA public key $(e,N)$, compute the ciphertext for the plaintext message $m$ provided in 
+file \bgreen{rsa.txt}.
+Provide your code or a transcript of your computation.
+
+
+\item[c)] Using the RSA public key $(e,N)$, compute the ciphertext for the plaintext message $m$ provided in 
+file \bgreen{rsa.txt}.
+Provide your code (if it is different than that used in part b) 
+or a transcript of your computation.
+
+
+%\item[d)] Suppose we use the private key for signing a 
+%message (or a hash of a message) without any message 
+%pre-processing (such as applying a padding scheme like OAEP).
+%Show, using the homomorphic property of RSA, how forged 
+%signatures can be created in this scenario.
+%What kind of attack are you mounting to generate this forgery?
+
+
+\end{itemize}
+
+
+
+% ------------------------------------------- %
+% ------------------------------------------- %
+% ------------------------------------------- %
+\section{RSA-OAEP}
+
+Consider RSA-OAP as described in the Chapter 10 of the textbook and detailed in RCF 8017 (also specified as PKCS \# 1). In particular, look at RSAES-OAEP. 
+
+\medskip
+
+\url{https://tools.ietf.org/html/rfc8017}
+
+\medskip
+
+In OAEP, we need two hash functions that can output variable length hashes. However, most hash functions have a fixed output length. In order to achieve variable length hashes, we use a \emph{Mask Generation Function}. In particular this standard specifies that MGF1 be used. 
+
+\medskip
+To simplify the illustration of MGF1, instead of using an underlying hash function like SHA-1 or SHA-256, suppose the underlying hash function is given by
+
+\[ h(x) = 2x + 1  \pmod {65521}. \] 
+
+Note that $65521 < 65536 = 2^{16}$ and so the output can always be considered as occupying two octets (bytes). You will assume that the output occupies two octets (bytes). Using this hash function, compute the output of 
+
+\[  \textrm{MGF1}(2^7+2^9+2^{10}, 5) \]
+
+That is, what are the 5 octets (bytes) of output from this call to the function. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{ElGamal Signatures}
+
+Consider the ElGamal signature scheme, as described in the 
+lecture notes, where the hash function is the identity 
+function (i.e., $H(m) = m$).
+
+\begin{itemize}
+\item[a)] Consider an instance with public key 
+$pk = (p,g,y) = (65537, 3, {20031})$.
+Suppose you are given the following two message-signature
+pairs 
+\begin{align*}
+\langle m_1, \sigma_1 \rangle = \langle 31415, (40071, 17134)\rangle \\
+\langle m_2, \sigma_2 \rangle = \langle 32768, (40071, 22525)\rangle
+\end{align*}
+Notice that the value of $r=g^k$ is the same for both.  (That is, both signatures were 
+generated with the same $k$ value. First, outline a method (algorithm) to 
+recover both $k$ and the private key $x$ in this situation. 
+Provide the equations needed to solve for $k$ and $x$.  Then, 
+compute the value of $k$ used and compute the private key $x$
+using this method.  
+
+
+\item[b)] Consider an instance with public key $pk = (p,g,y) = (65537, 3, 25733)$.  Determine which of the following is a valid signature for the message $m = 8676$ and which is not.  Show your work (or a trace of a program you write) for each.
+\begin{align*}
+\sigma_1 &= (42679, 17035) \quad \\ 
+\sigma_2 &= (42679, 17036) \quad
+\end{align*}
+
+%\item[bonus)] Consider an instance with public
+%key $pk = (p,g,y) = ( 65537, 3, 62154)$.
+%Suppose you are given the following two message-signature
+%pairs 
+%\begin{align*}
+%\langle m_1, \sigma_1 \rangle = \langle 101, (51666, 17409)\rangle \\
+%\langle m_2, \sigma_2 \rangle = \langle 1125, (51666, 43009)\rangle
+%\end{align*}
+%Find both $k$ and $x$ using your method from part (a) along with some extra work. Your method must not simply perform an exhaustive search for $x$ and $k$ from scratch. 
+
+   
+
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Finding Primitive Elements in $\mathbb{Z}_p^*$}
+
+First, explain how we determine if a given element in $\mathbb{Z}_p^*$ is primitive or not. 
+Using this, then explain how primitive elements are found in practice. 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Shamir Secret Sharing}
+
+Consider a $(5,10)$ secret sharing scheme working in $\ZZ_p$ with $p=8675309$.
+The shares are 
+\begin{align*}
+(x_{0}, y_{0}) &= (12, 7143298)\\
+(x_{1}, y_{1}) &= (23, 1423230)\\
+(x_{2}, y_{2}) &= (34, 5749964)\\
+(x_{3}, y_{3}) &= (45, 7567123)\\
+(x_{4}, y_{4}) &= (56, 6604906)\\
+(x_{5}, y_{5}) &= (67, 6204779)\\
+(x_{6}, y_{6}) &= (78, 4644166)\\
+(x_{7}, y_{7}) &= (89, 3811758)\\
+(x_{8}, y_{8}) &= (91, 2227010)\\
+(x_{9}, y_{9}) &= (107, 6208490)\\
+\end{align*}
+
+The shares are also found in the provided \code{shares.txt} file.
+Answer each of the questions. Include the code you used for the computations (or show a trace of the work
+that leads to he answers).
+
+\begin{itemize}
+\item[a)] Compute the secret $s$. Do this \textbf{twice} using different subsets of the shares to ensure you have the correct value. (You only have to show your work/trace once.)
+
+
+\item[b)] Add a new share with $x_{10} = 613$. What is its corresponding $y_{10} = f(x_{10}) = f(613)$ value?
+
+
+
+\item[c)] How many values of $x \in \ZZ_p$ satisfy $f(x) = 123456$? How many values in $x \in \ZZ_p$ satisfy $f(x)=123457$?
+
+
+
+\end{itemize}
+
+
+
+
+
+
+% --------------------------------------------------------------------------- %   
+\end{document}
+% --------------------------------------------------------------------------- %
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+% fin 
+ 
+ 
+
+
+
+
+
+f
