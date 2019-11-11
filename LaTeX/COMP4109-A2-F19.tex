@@ -106,10 +106,10 @@ If we assume $h$ is not collision resistant, we can find two elements $x, y \in 
 We have two cases to consider.
 ~\\~\\
 \textbf{Case 1:}
-In this case we assume $g$ is not collision resistant. If it is not then $g(x) = g(y)$ for some elements $x, y \in \{0, 1\}^{2n}$ where $x \neq y$. If this is the case then it does not matter whether or not $f$ is collision resistant. Since $g(x)$ produces the same hash as $g(y)$, $g(x)||g(x) = g(y)||g(y)$ so the function $f$ will also produce the same hash regardless of it's quality. 
+In this case we assume $g$ is not collision resistant. If it is not then $g(x) = g(y)$ for some elements $x, y \in \{0, 1\}^{2n}$ where $x \neq y$. If this is the case then it does not matter whether or not $f$ is collision resistant. Since $g(x)$ produces the same hash as $g(y)$, $g(x)||g(x) = g(y)||g(y)$ so the function $f$ will also produce the same hash regardless of its quality. 
 ~\\~\\
 \textbf{Case 2:}
-In this case we assume $g$ \textit{is} collision resistant. If this is the case then we have $g(x) \neq g(y)$ for some elements $x, y \in \{0, 1\}^{2n}$ where $x \neq y$. If this is the case then we must have $f(g(x)||g(x)) = f(g(y)||g(y))$ in order for us to have $h \notin CR$. Therefore $f$ is not collision resistant.
+In this case we assume $g$ \textit{is} collision resistant. If this is the case then we have $g(x) \neq g(y)$ for some elements $x, y \in \{0, 1\}^{2n}$ where $x \neq y$. If this is the case then we must have $f(g(x)||g(x)) = f(g(y)||g(y))$ in order for us to have $h \notin CR$. Therefore $f$ must not be collision resistant.
 ~\\~\\
 In \textbf{Case 1} and \textbf{Case 2}, we have shown that $g$ and $f$ cannot both be in $CR$ if $h \notin CR$. Therefore, by the nature of the contrapositive, we have proven that if $f \in CR \land g \in CR \Rightarrow h \in CR$.
 
