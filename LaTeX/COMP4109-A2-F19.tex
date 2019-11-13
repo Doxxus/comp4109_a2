@@ -10,6 +10,30 @@
 \usepackage{graphicx}              % to include grahics
 \usepackage{array}        
 \usepackage{pifont}                % for some fancy characters 
+\usepackage{listings}
+\usepackage{color}
+\usepackage[latin1]{inputenc}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Python,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
 
 \usepackage[pdftitle={COMP4109 Assignment},
             pdfsubject={Carleton University, 
@@ -188,14 +212,45 @@ That is, what are the 5 octets (bytes) of output from this call to the function.
 	\begin{tabular}{|r|l|}
 		\hline
 		\textbf{Octet Number}	&\textbf{Octet Value} 	\\ \hline
-		1	&2	\\
-		2	&2	\\
-		3	&2	\\
-		4	&4	\\
-		5	&10	\\
+		1	&0x00	\\
+		2	&0x00m	\\
+		3	&0xa6	\\
+		4	&0x00	\\
+		5	&0x00	\\
 		\hline
 	\end{tabular}
 \end{center}
+
+\subsection{Comments on results}
+
+The code (pictured below) was adapted from the MGF1 python implementation on the \href{https://en.wikipedia.org/wiki/Mask\_generation\_function\#Example\_Code}{MGF1 Wikipedia page}. In order to make it work with the supplied hash function I had to make some changes to the i2osp function (as pictured below) as well as make some changes to how the input and output of the MGF1 function and the h function was formatted (using struct.pack and struct.unpack). I was using big-endian formatting. I'm not too confident with the results but I at the very least, got five octets of output, so there must be something there.
+
+\newpage
+\subsection{Code used for computation}
+\begin{lstlisting}
+import struct
+
+def h(x):
+    y = struct.unpack(">q", x)
+    return struct.pack(">I", ((2*y[0] + 1) % 65521))
+
+def i2osp(integer, size=4):
+    return struct.pack(">I", integer)
+
+def mgf1(input, length):
+    counter = 0
+    output = b''
+    
+    while (len(output) < length):
+        C = i2osp(counter, 4)
+        output += h(input + C)
+        counter += 1
+  
+    return output[:length+1]
+    
+print(mgf1(struct.pack(">I", ((2**7) + (2**9) + (2**10))), 5))
+\end{lstlisting}
+
 
 \newpage
 

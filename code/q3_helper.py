@@ -1,21 +1,21 @@
-import hashlib
-from binascii import hexlify
+import struct
 
 def h(x):
-    return (2*x + 1) % 65521
+    y = struct.unpack(">q", x)
+    return struct.pack(">I", ((2*y[0] + 1) % 65521))
 
 def i2osp(integer, size=4):
-  return ''.join([chr((integer >> (8 * i)) & 0xFF) for i in reversed(range(size))])
+    return struct.pack(">I", integer)
 
-def mgf1(input, length, hash=hashlib.sha1):
-  counter = 0
-  output = ''
-  while (len(output) < length):
-    C = i2osp(counter, 4)
-    output += hash(input + C).digest()
-    counter += 1
-  return output[:length]
+def mgf1(input, length):
+    counter = 0
+    output = b''
     
-num = ((2**7) + (2**9) + (2**10))
-
-print(hexlify(mgf1(str(num), 5)))
+    while (len(output) < length):
+        C = i2osp(counter, 4)
+        output += h(input + C)
+        counter += 1
+  
+    return output[:length+1]
+    
+print(mgf1(struct.pack(">I", ((2**7) + (2**9) + (2**10))), 5))
