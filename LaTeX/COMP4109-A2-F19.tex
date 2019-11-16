@@ -103,11 +103,6 @@ each person working on the assignment.
 \bigskip   % a big skip (horizontal spacing)
 \hrule     % line across the page
 
-
-
-% ------------------------------------------- %
-% -                      Hash Functions     - %
-% ------------------------------------------- %
 \section{Hash Functions}
 
 Let $f$, $g$ and $h$ be hash functions that each map binary strings of length $2n$ to binary strings of length $n$. That is,
@@ -139,9 +134,6 @@ In \textbf{Case 1} and \textbf{Case 2}, we have shown that $g$ and $f$ cannot bo
 
 \newpage
 
-% ------------------------------------------- %
-% ------------------------------------------- %
-% ------------------------------------------- %
 \section{Textbook RSA}
 
 In each of these problems, consider textbook RSA.  
@@ -271,21 +263,10 @@ c = optimized_RSA(m,e,N)
 print(c)
 \end{lstlisting}
 
-%\item[d)] Suppose we use the private key for signing a 
-%message (or a hash of a message) without any message 
-%pre-processing (such as applying a padding scheme like OAEP).
-%Show, using the homomorphic property of RSA, how forged 
-%signatures can be created in this scenario.
-%What kind of attack are you mounting to generate this forgery?
-
-
 \end{itemize}
 
 \newpage
 
-% ------------------------------------------- %
-% ------------------------------------------- %
-% ------------------------------------------- %
 \section{RSA-OAEP}
 
 Consider RSA-OAP as described in the Chapter 10 of the textbook and detailed in RCF 8017 (also specified as PKCS \# 1). In particular, look at RSAES-OAEP. 
@@ -355,7 +336,6 @@ print(mgf1(struct.pack(">I", ((2**7) + (2**9) + (2**10))), 5))
 
 \newpage
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{ElGamal Signatures}
 
 Consider the ElGamal signature scheme, as described in the 
@@ -468,98 +448,13 @@ for s in sig:
     print("signature", s,":",eq1 == eq2)
 \end{lstlisting}
 
-%\item[bonus)] Consider an instance with public
-%key $pk = (p,g,y) = ( 65537, 3, 62154)$.
-%Suppose you are given the following two message-signature
-%pairs 
-%\begin{align*}
-%\langle m_1, \sigma_1 \rangle = \langle 101, (51666, 17409)\rangle \\
-%\langle m_2, \sigma_2 \rangle = \langle 1125, (51666, 43009)\rangle
-%\end{align*}
-%Find both $k$ and $x$ using your method from part (a) along with some extra work. Your method must not simply perform an exhaustive search for $x$ and $k$ from scratch. 
-
-   
-
 \end{itemize}
 
 \newpage
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Finding Primitive Elements in $\mathbb{Z}_p^*$}
 
 First, explain how we determine if a given element in $\mathbb{Z}_p^*$ is primitive or not. 
 Using this, then explain how primitive elements are found in practice. 
 
-\newpage
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Shamir Secret Sharing}
-
-Consider a $(5,10)$ secret sharing scheme working in $\ZZ_p$ with $p=8675309$.
-The shares are 
-\begin{align*}
-(x_{0}, y_{0}) &= (12, 7143298)\\
-(x_{1}, y_{1}) &= (23, 1423230)\\
-(x_{2}, y_{2}) &= (34, 5749964)\\
-(x_{3}, y_{3}) &= (45, 7567123)\\
-(x_{4}, y_{4}) &= (56, 6604906)\\
-(x_{5}, y_{5}) &= (67, 6204779)\\
-(x_{6}, y_{6}) &= (78, 4644166)\\
-(x_{7}, y_{7}) &= (89, 3811758)\\
-(x_{8}, y_{8}) &= (91, 2227010)\\
-(x_{9}, y_{9}) &= (107, 6208490)\\
-\end{align*}
-
-The shares are also found in the provided \code{shares.txt} file.
-Answer each of the questions. Include the code you used for the computations (or show a trace of the work
-that leads to he answers).
-
-\begin{itemize}
-\item[a)] Compute the secret $s$. Do this \textbf{twice} using different subsets of the shares to ensure you have the correct value. (You only have to show your work/trace once.)
-
-
-\item[b)] Add a new share with $x_{10} = 613$. What is its corresponding $y_{10} = f(x_{10}) = f(613)$ value?
-
-
-
-\item[c)] How many values of $x \in \ZZ_p$ satisfy $f(x) = 123456$? How many values in $x \in \ZZ_p$ satisfy $f(x)=123457$?
-
-
-
-\end{itemize}
-
-
-
-
-
-
-% --------------------------------------------------------------------------- %   
 \end{document}
-% --------------------------------------------------------------------------- %
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-% fin 
- 
- 
-
-
-
-
-
-f
