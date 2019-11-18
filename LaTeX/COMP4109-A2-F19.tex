@@ -460,7 +460,24 @@ Using this, then explain how primitive elements are found in practice.
 \subsection{Determining if an Element is Primitive in  $\mathbb{Z}_p^*$}
 An element is primitive in  $\mathbb{Z}_p^*$ if every coprime $c$ of $p$ can be represented as the power of $g$ modulo $p$ given by this formula: $$g^k mod(p) = k$$ If an element is primitive, it also means it is a generator of $\mathbb{Z}_p^*$ (ie. if $x$ is a primitive element in  $\mathbb{Z}_p^*$ then every number in  $\mathbb{Z}_p^*$ can be represented with the function: $x^k mod(p) = k$.
 
-\subsection{Finding Primitives in  $\mathbb{Z}_p^*$}
+\subsection{Finding Primitives in $\mathbb{Z}_p^*$}
+First we must find a single primitive in $\mathbb{Z}_p^*$. To do this let us assume that $D$ is the set of all divisors of $p-1$ since $p$ is prime, $p-1$ must be even by definition therefore $|D| \geq 3$ (ie the set must at least contain, $1, 2, p-1$. Now that this is established we can define primitives as this:
+\begin{center} 
+	$a \in \mathbb{Z}_p^*$ is primitive if $a^d mod(p) \neq 1, \forall d \in D$.
+\end{center}
+To find the first primitive in $\mathbb{Z}_p^*$ we simply need to iterate $a \in \{2, 3, ... , p-2\}$ untill we find a case where $a^d mod(p) \neq 1, \forall d \in D$. The first primitive we find will be refered to as $f$ from now on.
+~\\~\\
+To find the other primitives in $\mathbb{Z}_p^*$ we will be referring to this theorem:
 
+\begin{center}
+\textbf{Let $a$ be a primitive root modulo $m$. Then for any positive integer $k$, the least residue of $a^k$ is a primitive root modulo $m$ if and only if $k$ is relatively prime to $\phi(m)$.}
+\end{center}
 
+So, using the above theorem we simple need to find all of the numbers in the set $\{2, 3, ... , p-1\}$ that are relatively prime to $\phi(p)$. Let us call the set of relatively prime numbers to $\phi(p)$: $R$. Since we know $f$ is a primitive and the we now have the set $R$ we simple need to raise $f$ to every element of $R$ to find the other primitives in $\mathbb{Z}_p^*$. To put it more formally:
+
+\begin{center}
+	Let $P$ be the set of all primitives of $\mathbb{Z}_p^*$. $P$ is populated by calculating $a = f^r mod(p) \forall r \in R$.
+\end{center}
+
+Therefore, after all of the calculations for each $r \in R$ have been made we now have a fully populated set $P$ of all of the primitives in $\mathbb{Z}_p^*$.
 \end{document}
