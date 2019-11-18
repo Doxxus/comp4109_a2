@@ -149,8 +149,7 @@ Find the corresponding private exponent $d \in \mathbb{Z}_N^*$.
 Show how you did this. 
 
 \subsection{Determining $d$ through Wiener's Attack}
-We will use Weiner's attack to find the private exponent $d$ from the given $e$ and $N$. First we will determine all of the convergents of $\frac{e}{N}$. From each convergent, we will determine if one will solve the equation $f(x)=x^{2} - ((N-\phi(N)+1)x+ N = 0$. Solving this equation will tell us if there exists two integer roots that will make the equation
-$1 \equiv ed \bmod \phi(N)$ true. If we find the convergent $\frac{k}{d}$ that makes the statement true, then we found our $k$: the denominator. The convergent that solves $f(x)$ is $\frac{363}{509}$, $\phi(N) = 13029506445724987531764$. We plug them into our equation to see if the equation holds:
+We will use Weiner's attack to find the private exponent $d$ from the given $e$ and $N$. First we will determine all of the convergents of $\frac{e}{N}$. According to \href{https://en.wikipedia.org/wiki/Wiener\%27s_attack}{Wikipedia}, for each convergent, we will determine if it will solve the equation $f(x)=x^{2} - ((N-\phi(N)+1)x+ N = 0$. Solving this equation will tell us if there exists two integer roots that will factor N. If we find the convergent $\frac{k}{d}$ that makes the statement true, then we found our $d$: the denominator. The convergent that solves $f(x)$ is $\frac{363}{509}$, $\phi(N) = 13029506445724987531764$. We plug them into our equation to see if the equation holds:
 \begin{equation*}
 	\begin{split}
 		1 & \equiv ed \bmod \phi(N)\\
@@ -359,38 +358,44 @@ compute the value of $k$ used and compute the private key $x$
 using this method.  
 
 \subsection{Solve for $k$}
-We first isolate $k$ given the ElGamal signatures by avoiding creating a discrete log problem. We introduce $\sigma_1$ and $\sigma_2$ into a single equation.
+There are two values that use $k$ in their equations: $r = g^k \bmod p$ and $s = k^{-1}(H(m) - xr) \bmod p - 1$. The first one cannot be easily used to isolate and solve for $k$ as this results in a discrete log problem. We will then use the equation for $s$ to isolate and solve for $k$.
+Let  $s_1 =  k^{-1}((H(m_1)- xr) \bmod p-1 $ and $s_2 = k^{-1}(H(m_2)- xr) \bmod p-1$. We subsitute the $xr$ term from $s_2$ into $s_1$. This holds because the two ElGamal signatures share the same $x$ and $r$ values.
 \begin{equation*}
 	\begin{split}
-		s_1 - s_2 & \equiv k^{-1}((H(m_1)- xr_1) - k^{-1}(H(m_2)- xr_2) \bmod p-1 \\
-		& \equiv k^{-1}((H(m_1)- xr_1) - (H(m_2)- xr_2)) \bmod p-1 \\
-		& \equiv k^{-1}(H(m_1)- xr_1 - H(m_2)+ xr_2) \bmod p-1 \\
+		s_2 & \equiv k^{-1}(H(m_2)- xr) \bmod p-1 \\
+		ks_2 & \equiv H(m_2)- xr \bmod p-1 \\
+		ks_2 + xr & \equiv H(m_2) \bmod p-1 \\
+		xr & \equiv H(m_2) - ks_2 \bmod p-1 \\
 	\end{split}
 \end{equation*}
-Because $r_1 = r_2 = 40071$, we can replace $r_2$ with $r_1$ and simplify further.
+
 \begin{equation*}
 	\begin{split}
-		s_1 - s_2 & \equiv k^{-1}(H(m_1)- xr_1 - H(m_2)+ xr_1) \bmod p-1 \\
-		s_1 - s_2 & \equiv k^{-1}(H(m_1)- H(m_2)) \bmod p-1 \\
-		k (s_1 - s_2) & \equiv (H(m_1)- H(m_2)) \bmod p-1 \\
-		k & \equiv (H(m_1)- H(m_2)) * (s_1 - s_2)^{-1} \bmod p-1 \\
-		k & \equiv (m_1- m_2) * (s_1 - s_2)^{-1} \bmod p-1 \\
+		s_1 & \equiv k^{-1}(H(m_1) - xr) \bmod p-1 \\
+		s_1 & \equiv k^{-1}(H(m_1) - (H(m_2) - ks_2 \bmod p-1)) \bmod p-1 \\
+		s_1 & \equiv k^{-1}(H(m_1) - H(m_2) + ks_2) \bmod p-1 \\
+		ks_1 & \equiv H(m_1)- H(m_2) + ks_2 \bmod p-1 \\
+		ks_1 - ks_2 & \equiv H(m_1)- H(m_2) \bmod p-1 \\
+		k(s_1 - s_2) & \equiv H(m_1)- H(m_2) \bmod p-1 \\
+		k & \equiv (s_1 - s_2)^{-1}(H(m_1)- H(m_2) ) \bmod p-1 \\
+		k & \equiv (s_1 - s_2)^{-1}(m_1 - m_2) \bmod p-1 \\
 	\end{split}
 \end{equation*}
+
 We have created an equation for $k$. To solve for k, we plug in $m_1$, $m_2$, $s_1$, $s_2$, and $p$ into the equation:
 \begin{equation*}
 	\begin{split}
-		k & \equiv (m_1- m_2) * (s_1 - s_2)^{-1} \bmod p-1 \\
-		k & \equiv (32768-31415) * (22525-17134)^{-1} \bmod 65537-1 \\
-		k & \equiv 1353 * 5391^{-1} \bmod 65536 \\
-		k & \equiv 1353 * 14831 \bmod 65536 \\
+		k & \equiv (s_1 - s_2)^{-1}(m_1- m_2) \bmod p-1 \\
+		k & \equiv (22525-17134)^{-1}(32768-31415) \bmod 65537-1 \\
+		k & \equiv 5391^{-1} * 1353 \bmod 65536 \\
+		k & \equiv 14831 * 1353 \bmod 65536 \\
 		k & \equiv 12327 \\
 	\end{split}
 \end{equation*}
 We found the inverse of 5391 using the \href{https://en.wikibooks.org/wiki/Algorithm_Implementation/Mathematics/Extended_Euclidean_algorithm#Iterative_algorithm_3}{Extended Euclidean Algorithm}.\newline \\ $\therefore$ our $k$ that produced the two ElGamal signatures is 12327.
 
 \subsection{Solve for $x$}
-Using the equation $H(m)\equiv sk + rx \bmod p-1$, we can isolate $x$.
+Using the equation $H(m)\equiv sk + rx \bmod p-1$, we can isolate $x$. We will use the values of $\langle m_1, \sigma_1 \rangle$ to determine $x$.
 \begin{equation*}
 	\begin{split}
 		H(m) & \equiv sk + rx \bmod p-1 \\
